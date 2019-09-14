@@ -1,0 +1,37 @@
+server:
+  port: 9200
+
+endpoints:
+  enabled:  false
+  health:
+    enabled: true
+  info:
+    sensitive: true
+    enabled: true
+  loggers:
+    enabled: true
+
+management:
+  health:
+    defaults:
+      enabled: false
+    security:
+      enabled: false
+
+security:
+  basic:
+    enabled: true
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: elastic-search-service
+        uri: ${elasticsearch.rest.uri}
+        predicates:
+          - Path=/**
+          - Method=GET
+        filters:
+          - RewritePath=/api/(?<segment>.*), /$\{segment}
+          - AddRequestHeader=Access-Control-Request-Headers, X-Requested-With
+          - ForwardBasicAuthentication=${elasticsearch.rest.username}, ${elasticsearch.rest.password}
