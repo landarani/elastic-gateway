@@ -26,12 +26,11 @@ spring:
   cloud:
     gateway:
       routes:
-      - id: elastic-search-service
-        uri: ${elasticsearch.rest.uri}
+      - id: gateway-service
+        uri: ${service.uri}
         predicates:
           - Path=/**
-          - Method=GET
         filters:
           - RewritePath=/api/(?<segment>.*), /$\{segment}
           - AddRequestHeader=Access-Control-Request-Headers, X-Requested-With
-          - ForwardBasicAuthentication=${elasticsearch.rest.username}, ${elasticsearch.rest.password}
+          - ForwardBasicAuthentication=${service.username}, ${service.password}

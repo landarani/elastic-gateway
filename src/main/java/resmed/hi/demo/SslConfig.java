@@ -1,7 +1,6 @@
 package resmed.hi.demo;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.config.HttpClientProperties;
@@ -21,13 +20,13 @@ import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Base64;
 
-@ConditionalOnProperty("elasticsearch.rest.certificate")
+@ConditionalOnProperty("service.cacertificate")
 @Configuration
 @Slf4j
 public class SslConfig {
 
-    public SslConfig(HttpClientProperties properties, @Value("${elasticsearch.rest.certificate}") String cert) throws Exception {
-        File tmp = File.createTempFile("es_", "");
+    public SslConfig(HttpClientProperties properties, @Value("${service.cacertificate}") String cert) throws Exception {
+        File tmp = File.createTempFile("sg_", "");
         try (PrintWriter writer = new PrintWriter(tmp)) {
             writer.println(cert);
         }
@@ -35,7 +34,6 @@ public class SslConfig {
     }
 
     @Bean
-    @Qualifier("elasticSslContext")
     public SSLContext sslContext(TrustManagerFactory tmf) throws Exception {
         SSLContext context = SSLContext.getInstance("SSL");
         context.init(null, tmf.getTrustManagers(), new SecureRandom(String.valueOf(System.currentTimeMillis()).getBytes()));
@@ -45,7 +43,7 @@ public class SslConfig {
     }
 
     @Bean
-    public TrustManagerFactory trustManagerFactory(@Value("${elasticsearch.rest.certificate}") String cert) throws Exception {
+    public TrustManagerFactory trustManagerFactory(@Value("${service.cacertificate}") String cert) throws Exception {
         log.info("Creating the certificate from [{}]", cert);
         TrustManagerFactory factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         factory.init(keystore(certificate(cert)));

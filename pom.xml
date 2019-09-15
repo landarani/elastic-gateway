@@ -7,10 +7,10 @@
     <version>2.1.6.RELEASE</version>
   </parent>
   <groupId>resmed.hi.demo</groupId>
-  <artifactId>es-gateway</artifactId>
+  <artifactId>service-gateway</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Elastic Search Gateway</name>
-  <description>Gateway project to let outside resources hace access to PCF deployed elastic search</description>
+  <name>Service Gateway</name>
+  <description>Gateway project to let outside resources have access to PCF managed services</description>
 
   <properties>
     <java.version>1.8</java.version>
